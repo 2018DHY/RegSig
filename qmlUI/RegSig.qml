@@ -5,12 +5,18 @@ import QtQuick.Layouts 1.0
 
 
 Item{
+    id:cop1
     width: 680
     height: 480
+
 
 //    MyDB{
 //        id:db
 //    }
+
+    property alias text: title1.text
+
+    property bool stating: true
 
     GridLayout{
         id:grid1
@@ -79,8 +85,16 @@ Item{
             text:"确认"
             Layout.columnSpan: 2
             Layout.preferredWidth: width
-//            Layout.horizontalCenter:
             anchors.horizontalCenter: parent.horizontalCenter
+            onClicked: {
+                if(stating){
+                    var user=usrin.text;
+                    console.log(user);
+                    db.sigIn(usrin.text,passin.text)
+                }else{
+                    db.sigup(usrin.text,passin.text)
+                }
+            }
         }
 
 

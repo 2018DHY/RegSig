@@ -7,16 +7,19 @@
 MyDB::MyDB(QObject *parent)
     : QObject{parent}
 {
-
+    load();
 }
 
 bool MyDB::sigup(QString user, QString pass)
 {
     if(_db.contains(user)){
-        return false;
         emit msg("已存在用户名");
+        return false;
+
     }else{
         _db.insert(user,pass);
+        emit msg("注册成功,快去登录吧");
+        save();
         return true;
     }
 }
@@ -25,21 +28,25 @@ bool MyDB::sigIn(QString user, QString pass)
 {
     if(_db.contains(user)){
         if(_db[user]== pass){
+            emit msg("登录成功");
             return true;
         }else{
-            return false;
             emit msg("密码错误");
+            return false;
+
         }
     }else{
-        return false;
         emit msg("不存在该用户名");
+
+        return false;
+
     }
 }
 
 void MyDB::load()
 {
     QString temp=qApp->applicationDirPath();
-    temp.append(_filename);
+    temp.append("/"+_filename);
     QFileInfo info(temp);
     if(info.exists()){
         QFile file(temp);
@@ -77,7 +84,7 @@ void MyDB::load()
 void MyDB::save()
 {
     QString temp=qApp->applicationDirPath();
-    temp.append(_filename);
+    temp.append("/"+_filename);
         QFile file(temp);
         if(file.open(QIODevice::WriteOnly)){
             QTextStream stream(&file);
